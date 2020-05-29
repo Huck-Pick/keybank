@@ -39,7 +39,7 @@ keybank es un pequeño gestor de contraseñas de al menos 512 bits de seguridad,
    - Windows.h
 # Instalacion
 ```sh
-> git clone URL_repositorio
+> git clone https://github.com/Huck-Pick/keybank.git
 > cd .\sourse\
 > g++ -o .\keybank.exe .\keybank.cpp
 > xcopy .\keybank.exe ..\keybank\
