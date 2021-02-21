@@ -95,7 +95,7 @@ Bank * bank_from_file(string file_name){
     return data;
 }
 void save_bank(string file_name, Bank * USER){
-    stk_file F_stk(m*m*m,1+USER->keys.size());
+    stk_file F_stk(m*m*m,1+USER->get_keys_size());
     F_stk.clear();
     dat_t c;
     string id, pass_l, pass_m;
@@ -112,9 +112,9 @@ void save_bank(string file_name, Bank * USER){
     pass_m.clear();
     string site, email, pass;
     for (size_t y=1; y<F_stk.height(); y++){
-        site=USER->keys[y-1].get_site();
-        email=USER->keys[y-1].get_email();
-        pass=USER->keys[y-1].get_pass();
+        site=USER->get_key_site(y-1);
+        email=USER->get_key_email(y-1);
+        pass=USER->get_key_pass(y-1);
         for (size_t x=0; x<F_stk.width(); x++){
             c.first=(unsigned char)site[x];
             c.second=(unsigned char)email[x];
@@ -183,9 +183,9 @@ void edit_key_from_bank(Bank *USER){
     if( add2string(local_pass)!=decrypt_w_local_pass(USER->get_pass_local(),local_pass)){
         return ;
     }
-    for (size_t i=0; i<USER->keys.size(); i++)
-        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->keys[i].get_site(), local_pass) )<<endl;
-    cout<<endl<<USER->keys.size()+1<<")\tExit"<<endl;
+    for (size_t i=0; i<USER->get_keys_size(); i++)
+        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->get_key_site(i), local_pass) )<<endl;
+    cout<<endl<<USER->get_keys_size()+1<<")\tExit"<<endl;
     int op;
     do{
         cout<<"op: ";
@@ -194,9 +194,9 @@ void edit_key_from_bank(Bank *USER){
             while (cin.get() != '\n') continue;
             cout<<"op: ";
         }
-    }while(op<1 || op>USER->keys.size()+1);
+    }while(op<1 || op>USER->get_keys_size()+1);
 
-    if (op==USER->keys.size()+1 ){
+    if (op==USER->get_keys_size()+1 ){
         system("cls");
         return;
     }
@@ -207,7 +207,7 @@ void edit_key_from_bank(Bank *USER){
     fflush(stdin);
     getline(cin, site);
     if (sha256(site)==same){
-        site=USER->keys[op-1].get_site();
+        site=USER->get_key_site(op-1);
     }
     else{
         site=add2string(site);
@@ -216,7 +216,7 @@ void edit_key_from_bank(Bank *USER){
     cout<<"Email: ";
     getline(cin, email);
     if (sha256(email)==same){
-        email=USER->keys[op-1].get_email();
+        email=USER->get_key_email(op-1);
     }
     else{
         email=add2string(email);
@@ -226,7 +226,7 @@ void edit_key_from_bank(Bank *USER){
     getline(cin, pass);
     system("cls");
     if (sha256(pass)==same){
-        pass=USER->keys[op-1].get_pass();
+        pass=USER->get_key_pass(op-1);
     }
     else{
         cout<<"master pass: ";
@@ -240,12 +240,12 @@ void edit_key_from_bank(Bank *USER){
             cout<<"Pasword cambiado"<<endl;
         }
         else{
-            pass=USER->keys[op-1].get_pass();
+            pass=USER->get_key_pass(op-1);
         }
     }
     master_pass.clear();
     local_pass.clear();
-    USER->keys[op-1].set(site,email,pass);
+    USER->set_key_changes(op-1, site, email, pass);
     site.clear();
     email.clear();
     pass.clear();
@@ -262,9 +262,9 @@ void rm_key_from_bank(Bank *USER){
     if( add2string(local_pass)!=decrypt_w_local_pass(USER->get_pass_local(),local_pass)){
         return ;
     }
-    for (size_t i=0; i<USER->keys.size(); i++)
-        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->keys[i].get_site(), local_pass) )<<endl;
-    cout<<endl<<USER->keys.size()+1<<")\tExit"<<endl;
+    for (size_t i=0; i<USER->get_keys_size(); i++)
+        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->get_key_site(i), local_pass) )<<endl;
+    cout<<endl<<USER->get_keys_size()+1<<")\tExit"<<endl;
     int op;
     do{
         cout<<"op: ";
@@ -273,8 +273,8 @@ void rm_key_from_bank(Bank *USER){
             while (cin.get() != '\n') continue;
             cout<<"op: ";
         }
-    }while(op<1 || op>USER->keys.size()+1);
-    if (op==USER->keys.size()+1 ){
+    }while(op<1 || op>USER->get_keys_size()+1);
+    if (op==USER->get_keys_size()+1 ){
         system("cls");
         return;
     }
@@ -318,9 +318,9 @@ void key_bank_to_clip(Bank *USER){
     if( add2string(local_pass)!=decrypt_w_local_pass(USER->get_pass_local(),local_pass)){
         return ;
     }
-    for (size_t i=0; i<USER->keys.size(); i++)
-        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->keys[i].get_site(), local_pass) )<<endl;
-    cout<<endl<<USER->keys.size()+1<<")\tExit"<<endl;
+    for (size_t i=0; i<USER->get_keys_size(); i++)
+        cout<<i+1<<")\t"<<recoverstring( decrypt_w_local_pass( USER->get_key_site(i), local_pass) )<<endl;
+    cout<<endl<<USER->get_keys_size()+1<<")\tExit"<<endl;
     int op;
     do{
         cout<<"op: ";
@@ -329,8 +329,8 @@ void key_bank_to_clip(Bank *USER){
             while (cin.get() != '\n') continue;
             cout<<"op: ";
         }
-    }while(op<1 || op>USER->keys.size()+1);
-    if (op==USER->keys.size()+1 ){
+    }while(op<1 || op>USER->get_keys_size()+1);
+    if (op==USER->get_keys_size()+1 ){
         system ("cls");
         return;
     }
@@ -344,10 +344,10 @@ void key_bank_to_clip(Bank *USER){
         local_pass.clear();
         return;
     }
-    SetToClipboard( recoverstring( decrypt_w_master_pass( decrypt_w_local_pass( USER->keys[op-1].get_pass(),local_pass),master_pass) ) );
+    SetToClipboard( recoverstring( decrypt_w_master_pass( decrypt_w_local_pass( USER->get_key_pass(op-1),local_pass),master_pass) ) );
     system("cls");
     cout<<"tienes 30 segundos"<<endl<<endl;
-    cout<<"Correo ligado:\t"<<recoverstring( decrypt_w_local_pass( USER->keys[op-1].get_email(), local_pass ))<<endl<<endl;
+    cout<<"Correo ligado:\t"<<recoverstring( decrypt_w_local_pass( USER->get_key_email(op-1), local_pass ))<<endl<<endl;
     for (size_t i=30; i>=0; i-=2){
         cout<<i<<":";
         Sleep(2000);
@@ -466,14 +466,14 @@ string edit_user_bank(Bank * USER, string file_name){
     USER->set(new_name, new_local_pass, new_master_pass);
 
     string new_site, new_email, new_pass;
-    for (size_t i=0; i< USER->keys.size(); i++){
+    for (size_t i=0; i< USER->get_keys_size(); i++){
         new_site.clear();
         new_email.clear();
         new_pass.clear();
-        new_site= crypt_w_local_pass( decrypt_w_local_pass(USER->keys[i].get_site(),local_pass), temp_l);
-        new_email= crypt_w_local_pass( decrypt_w_local_pass(USER->keys[i].get_email() ,local_pass), temp_l);  
-        new_pass = crypt_w_local_pass( crypt_w_master_pass( decrypt_w_master_pass( decrypt_w_local_pass(USER->keys[i].get_pass() ,local_pass),master_pass),temp_m), temp_l) ; 
-        USER->keys[i].set(new_site, new_email, new_pass);
+        new_site= crypt_w_local_pass( decrypt_w_local_pass(USER->get_key_site(i),local_pass), temp_l);
+        new_email= crypt_w_local_pass( decrypt_w_local_pass(USER->get_key_email(i) ,local_pass), temp_l);  
+        new_pass = crypt_w_local_pass( crypt_w_master_pass( decrypt_w_master_pass( decrypt_w_local_pass(USER->get_key_pass(i) ,local_pass),master_pass),temp_m), temp_l) ; 
+        USER->set_key_changes(i,new_site,new_email,new_pass);
     }
     master_pass.clear();
     local_pass.clear();
@@ -490,7 +490,8 @@ void opciones(){
     cout<<"\t edit\t\tEdita llave"<<endl;
     cout<<"\t clip\t\tGuarda contrase"<<char(164)<<"a a portapapeles por 30 s"<<endl;
     cout<<"\t edit_user\tEdita: nombre, contrase"<<char(164)<<"a local y maestra"<<endl;
-    cout<<"\t rm_user\tBorra usuario"<<endl<<endl;
+    cout<<"\t rm_user\tBorra usuario"<<endl;
+    cout<<"\t temp_pass\tCrea una contrasenia aleatoria de 125 bits"<<endl<<endl;
 
 }
 
@@ -504,4 +505,32 @@ void cout_menu(){
     cout<<">.\\keybank.exe <NOMBRE_USUARIO> <OPCION> "<<endl;
     opciones();
     return;
+}
+
+std::string get_rand_pass(){
+    unsigned char a;
+    unsigned int  r;
+    unsigned int N=24;
+    std::string temp;
+    temp.clear();
+    for (size_t i=0; i<N; i++){
+        for (size_t j=0; j<rand()%1024; j++)
+            rand();
+        if (rand()%2){
+            r=rand()%10+48;
+        }
+        else{
+            if (rand()%2){
+                r=(unsigned int)(rand());
+                r=(unsigned int)(r%25)+65;
+            }
+            else{
+                r=(unsigned int)(rand());
+                r=(unsigned int)(r%25)+97;
+            }
+        }
+        a=r;
+        temp+=a;
+    }
+    return temp;
 }
