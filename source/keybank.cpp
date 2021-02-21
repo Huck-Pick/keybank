@@ -2,7 +2,8 @@
 #include <cmath>
 #include <vector>
 #include <fstream>
-
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 string path;
 
@@ -21,7 +22,7 @@ string edit=            "262121C5372BE8AF3AE6FF0D3D138D9E6E1249335222C7F0E02535E
 string clip=            "67905AD3CC2DD52B1F5F6A6D2814DE0396618B29B4238B9AF5207AEB69936E6D";
 string edit_u=          "75C176A60370BAE8AD556E416FF53722E61ADF01A54A5FEBFE31E7C49FD443A9";
 string erase_user=      "1BDFD402BF43077829B6CFF964641FD710CC304BE35B73EDAEE8FD6A2B594ECB";
-
+string rand_pass=       "93D7081B043A938D30AC30B8DA047A88A580C70B3906D55E96B52942221DE33B";
 int main(int argc, char *argv[]){
     if (argc==1){
         cout_menu();
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]){
             return 0;
         }
         string op=sha256(argv[2]);
-        if (op!=add && op!=edit && op !=rm && op!=clip &&op!=erase_user && op!=edit_u){
+        if (op!=add && op!=edit && op !=rm && op!=clip &&op!=erase_user && op!=edit_u && op!=rand_pass){
             opciones();
             return 0;
         }
@@ -67,6 +68,10 @@ int main(int argc, char *argv[]){
             }
             if (op==edit_u){
                 file_name=edit_user_bank(USER,file_name);
+            }
+            if (op==temp_pass){
+                srand(time(NULL));
+                get_rand_pass();
             }
         save_bank(file_name,USER);
         free(USER);

@@ -491,7 +491,7 @@ void opciones(){
     cout<<"\t clip\t\tGuarda contrase"<<char(164)<<"a a portapapeles por 30 s"<<endl;
     cout<<"\t edit_user\tEdita: nombre, contrase"<<char(164)<<"a local y maestra"<<endl;
     cout<<"\t rm_user\tBorra usuario"<<endl;
-    cout<<"\t temp_pass\tCrea una contrasenia aleatoria de 125 bits"<<endl<<endl;
+    cout<<"\t rand_pass\tCrea una contrasenia aleatoria de 125 bits"<<endl<<endl;
 
 }
 
@@ -507,7 +507,7 @@ void cout_menu(){
     return;
 }
 
-std::string get_rand_pass(){
+void get_rand_pass(){
     unsigned char a;
     unsigned int  r;
     unsigned int N=24;
@@ -532,5 +532,8 @@ std::string get_rand_pass(){
         a=r;
         temp+=a;
     }
-    return temp;
+    cout<<endl<<'\t'<< temp<<endl<<endl;
+    SetToClipboard(temp);
+    cout<<'\t'<<"Copiado a portapapeles"<<endl<<endl;
+    return;
 }
